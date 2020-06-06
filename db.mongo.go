@@ -1,4 +1,4 @@
-package github.com/benacook/mongodb-helper-go/blob/develop/db.mongo.go
+package mongodbhelper
 
 import (
 	"context"
