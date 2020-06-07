@@ -1,3 +1,3 @@
-module github.com/benacook/mongodb-helper-go
+module github.com/benacook/mongodbhelpergo
 
 go 1.14
