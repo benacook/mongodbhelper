@@ -19,6 +19,14 @@ type Mongodb struct {
 	Context    context.Context
 }
 
+type MongoInterface interface {
+	Connect(uri string) error
+	InsertElement(i interface{}) error
+	GetLatest() (interface{}, error)
+	GetLatestByKey(key string, value string, result interface{}) error
+
+}
+
 func NewMongoDB(name string) Mongodb {
 	return Mongodb{DBName: name}
 }
