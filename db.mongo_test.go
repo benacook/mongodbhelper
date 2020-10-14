@@ -16,13 +16,13 @@ func TestConnect(t *testing.T) {
 
 	// Expect Do to be called once with 123 and "Hello GoMock" as parameters, and return nil from the mocked call.
 	mockDoer.EXPECT().Connect("mongodb://mongo:27017").Return(nil).Times(1)
-	mockDoer.EXPECT().Connect("mongodb://mongo:27010").Return(errors.New(
+	mockDoer.EXPECT().Connect("").Return(errors.New(
 		"invalid host")).Times(1)
 	err := mdb.Connect("mongodb://mongo:27017")
 	if err != nil {
 		t.Fail()
 	}
-	err = mdb.Connect("mongodb://mongo:27010")
+	err = mdb.Connect("")
 	if err == nil {
 		t.Fail()
 	}
@@ -54,6 +54,39 @@ func TestInsertElement(t *testing.T) {
 
 	err = mdb.InsertElement(nil)
 	if err == nil {
+		t.Fail()
+	}
+}
+
+
+func TestGetLatest(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	mockDoer := mock_mongodbhelper.NewMockMongoInterface(mockCtrl)
+	mdb := mockDoer
+	dr := dummyRecord{"ben", 27}
+
+	// Expect Do to be called once with 123 and "Hello GoMock" as parameters, and return nil from the mocked call.
+	mockDoer.EXPECT().GetLatest().Return(dr, nil).Times(1)
+	mockDoer.EXPECT().GetLatest().Return(dummyRecord{},
+	errors.New("no element to insert")).
+		Times(1)
+
+	res, err := mdb.GetLatest()
+	if err != nil {
+		t.Fail()
+	}
+
+	if res != dr{
+		t.Fail()
+	}
+
+	res, err = mdb.GetLatest()
+	if err == nil {
+		t.Fail()
+	}
+	if res == dr{
 		t.Fail()
 	}
 }
